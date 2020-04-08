@@ -18,11 +18,12 @@ namespace E1.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(SearchCriteriaViewModel criteria)
+        public IActionResult Index([FromQuery]SearchCriteriaViewModel criteria)
         {
             var persons = this.personRepository.Search(new SearchPersonCriteria
             {
-                ExactName = criteria.Name,
+                PartialName = criteria.PartialName,
+                ExactName = criteria.ExactName,
                 GroupId = criteria.GroupId
             });
 
