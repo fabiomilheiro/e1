@@ -2,13 +2,13 @@
 
 @using (Html.BeginForm("Index", "Persons", new { }, FormMethod.Get))
 {
-    <div class="">
+    <div class="person-search">
         <div id="exact-search" class="form-group col-2">
-            <label for="@Html.IdFor(m => m.ExactName)">Exact name <button class="toggle-search">Toggle</button></label>
+            <label for="@Html.IdFor(m => m.ExactName)">Exact name <a class="toggle-search">(Toggle)</a></label>
             @Html.TextBoxFor(m => m.ExactName)
         </div>
         <div id="partial-search" class="form-group col-1">
-            <label for="@Html.IdFor(m => m.PartialName)">Partial name <button class="toggle-search">Toggle</button></label>
+            <label for="@Html.IdFor(m => m.PartialName)">Partial name <a class="toggle-search">(Toggle)</a></label>
             @Html.TextBoxFor(m => m.PartialName)
         </div>
         <div class="form-group col-1">
