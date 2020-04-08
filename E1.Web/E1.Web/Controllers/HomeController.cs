@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using E1.Web.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using E1.Web.Models;
@@ -11,15 +12,18 @@ namespace E1.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IPersonRepository personRepository;
+        private readonly ILogger<HomeController> logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IPersonRepository personRepository, ILogger<HomeController> logger)
         {
-            _logger = logger;
+            this.personRepository = personRepository;
+            this.logger = logger;
         }
 
         public IActionResult Index()
         {
+            var person = personRepository.GetPerson(1);
             return View();
         }
 

@@ -11,6 +11,13 @@ namespace E1.Web.DataAccess
 
     public class PersonRepository : IPersonRepository
     {
+        private readonly AppDbContext dbContext;
+
+        public PersonRepository(AppDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
         public Person GetPerson(int id)
         {
             throw new System.NotImplementedException();
