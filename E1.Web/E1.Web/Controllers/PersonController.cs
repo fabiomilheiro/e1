@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E1.Web.Controllers
 {
+    [Route("persons")]
     public class PersonController : Controller
     {
         private readonly IPersonRepository personRepository;

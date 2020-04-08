@@ -71,16 +71,19 @@ namespace E1.Web
                 using (var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>())
                 {
                     dbContext.Database.EnsureCreated();
-                    
-                    var adminGroup = new Group {Name = "Administrators"};
-                    var teachersGroup = new Group {Name = "Teachers"};
-                    var studentsGroup = new Group {Name = "Students"};
+
                     CreateGroups(dbContext, new[]
                     {
-                        adminGroup,
-                        teachersGroup,
-                        studentsGroup
+                        new Group {Name = "Administrators"},
+                        new Group {Name = "Teachers"},
+                        new Group {Name = "Students"}
                     });
+                    dbContext.SaveChanges();
+
+                    var adminGroup = GetGroup(dbContext, "Administrators");
+                    var teachersGroup = GetGroup(dbContext, "Teachers");
+                    var studentsGroup = GetGroup(dbContext, "Students");
+
                     CreatePersons(dbContext, new[]
                     {
                         new Person {Name = "John Smith", CreatedTimestamp = DateTime.UtcNow, Group = adminGroup},
@@ -107,6 +110,11 @@ namespace E1.Web
                     dbContext.Groups.Add(group);
                 }
             }
+        }
+
+        private static Group GetGroup(AppDbContext dbContext, string name)
+        {
+            return dbContext.Groups.SingleOrDefault(g => g.Name == name);
         }
 
         private static void CreatePersons(AppDbContext dbContext, Person[] persons)
