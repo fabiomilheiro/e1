@@ -1,9 +1,12 @@
-﻿using E1.Web.Domain;
+﻿using System.Collections.Generic;
+using E1.Web.Domain;
 
 namespace E1.Web.DataAccess
 {
     public interface IPersonRepository
     {
+        IEnumerable<Person> Search(SearchPersonCriteria criteria);
+
         Person GetPerson(int id);
 
         Person AddPerson(Person person);
@@ -16,6 +19,11 @@ namespace E1.Web.DataAccess
         public PersonRepository(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public IEnumerable<Person> Search(SearchPersonCriteria criteria)
+        {
+            throw new System.NotImplementedException();
         }
 
         public Person GetPerson(int id)
