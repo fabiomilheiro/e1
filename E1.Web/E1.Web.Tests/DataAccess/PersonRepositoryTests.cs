@@ -34,6 +34,14 @@ namespace E1.Web.Tests.DataAccess
         }
 
         [Fact]
+        public void Search_NullCriteria_Throws()
+        {
+            Action action = () => this.sut.Search(null);
+
+            action.Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("criteria");
+        }
+
+        [Fact]
         public void Search_FiltersByGroup_ReturnsPersonsInGroup()
         {
             var administrator = new Person { Name = "X", Group = administratorsGroup };

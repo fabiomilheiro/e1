@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using E1.Web.Domain;
 
 namespace E1.Web.DataAccess
@@ -23,6 +24,11 @@ namespace E1.Web.DataAccess
 
         public IEnumerable<Person> Search(SearchPersonCriteria criteria)
         {
+            if (criteria == null)
+            {
+                throw new ArgumentNullException(nameof(criteria));
+            }
+
             throw new System.NotImplementedException();
         }
 
