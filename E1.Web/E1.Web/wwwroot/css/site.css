@@ -75,6 +75,11 @@ body {
     color: cadetblue;
 }
 
-.person-search > div {
-    /*display: inline-block;*/
+.field-validation-error {
+    font-weight: bold;
+    color: red;
+}
+
+.input-validation-error {
+    border-color: maroon;
 }

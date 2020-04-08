@@ -58,11 +58,12 @@ namespace E1.Web.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult Add([FromBody] AddPersonViewModel model)
+        public IActionResult Add([FromForm] AddPersonViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                this.TempData.Add("Success", "Please verify the error below.");
+                model.Groups = GetGroupSelectListItems(model.GroupId);
+                this.TempData["Error"] = "Please verify the error below.";
                 return View(model);
             }
 
@@ -73,7 +74,7 @@ namespace E1.Web.Controllers
                 GroupId = model.GroupId.GetValueOrDefault()
             });
 
-            this.TempData.Add("Success", "The person was created successfully.");
+            this.TempData["Success"] = "The person was created successfully.";
             return RedirectToAction("Index");
         }
 
