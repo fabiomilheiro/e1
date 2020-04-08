@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using E1.Web.DataAccess;
+using E1.Web.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +40,8 @@ namespace E1.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                SeedDatabase(app);
             }
             else
             {
@@ -62,6 +62,64 @@ namespace E1.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void SeedDatabase(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                using (var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>())
+                {
+                    dbContext.Database.EnsureCreated();
+                    
+                    var adminGroup = new Group {Name = "Administrators"};
+                    var teachersGroup = new Group {Name = "Teachers"};
+                    var studentsGroup = new Group {Name = "Students"};
+                    CreateGroups(dbContext, new[]
+                    {
+                        adminGroup,
+                        teachersGroup,
+                        studentsGroup
+                    });
+                    CreatePersons(dbContext, new[]
+                    {
+                        new Person {Name = "John Smith", CreatedTimestamp = DateTime.UtcNow, Group = adminGroup},
+                        new Person {Name = "John Boss", CreatedTimestamp = DateTime.UtcNow, Group = adminGroup},
+                        new Person {Name = "May Schwarz", CreatedTimestamp = DateTime.UtcNow, Group = teachersGroup},
+                        new Person {Name = "Mufasa", CreatedTimestamp = DateTime.UtcNow, Group = studentsGroup},
+                        new Person {Name = "Simba", CreatedTimestamp = DateTime.UtcNow, Group = studentsGroup},
+                        new Person {Name = "Nala", CreatedTimestamp = DateTime.UtcNow, Group = studentsGroup}
+                    });
+
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        private static void CreateGroups(AppDbContext dbContext, Group[] groups)
+        {
+            foreach (var group in groups)
+            {
+                var existingGroup = dbContext.Groups.SingleOrDefault(g => g.Name == group.Name);
+
+                if (existingGroup == null)
+                {
+                    dbContext.Groups.Add(group);
+                }
+            }
+        }
+
+        private static void CreatePersons(AppDbContext dbContext, Person[] persons)
+        {
+            foreach (var person in persons)
+            {
+                var existingPerson = dbContext.Groups.SingleOrDefault(g => g.Name == person.Name);
+
+                if (existingPerson == null)
+                {
+                    dbContext.Persons.Add(person);
+                }
+            }
         }
     }
 }
