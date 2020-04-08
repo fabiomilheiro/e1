@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using E1.Web.Domain;
 
 namespace E1.Web.DataAccess
@@ -11,9 +12,16 @@ namespace E1.Web.DataAccess
     public class GroupRepository : IGroupRepository
 
     {
+        private readonly AppDbContext dbContext;
+
+        public GroupRepository(AppDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
         public IEnumerable<Group> GetGroups()
         {
-            throw new System.NotImplementedException();
+            return this.dbContext.Groups.ToArray();
         }
     }
 }
