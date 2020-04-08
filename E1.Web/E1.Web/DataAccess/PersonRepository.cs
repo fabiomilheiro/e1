@@ -11,7 +11,7 @@ namespace E1.Web.DataAccess
 
         Person GetPerson(int id);
 
-        Person AddPerson(Person person);
+        void AddPerson(Person person);
     }
 
     public class PersonRepository : IPersonRepository
@@ -62,9 +62,15 @@ namespace E1.Web.DataAccess
             throw new System.NotImplementedException();
         }
 
-        public Person AddPerson(Person person)
+        public void AddPerson(Person person)
         {
-            throw new System.NotImplementedException();
+            if (person == null)
+            {
+                throw new ArgumentNullException(nameof(person));
+            }
+
+            this.dbContext.Persons.Add(person);
+            this.dbContext.SaveChanges();
         }
 
         private static bool ShouldUseExactName(SearchPersonCriteria criteria)

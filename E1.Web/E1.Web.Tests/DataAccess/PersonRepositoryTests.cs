@@ -30,7 +30,34 @@ namespace E1.Web.Tests.DataAccess
             this.dbContext.Database.OpenConnection();
             this.dbContext.Database.EnsureCreated();
 
+            this.dbContext.Groups.AddRange(this.administratorsGroup, this.teachersGroup);
+            this.dbContext.SaveChanges();
+
             this.sut = new PersonRepository(this.dbContext);
+        }
+
+        [Fact]
+        public void Add_Null_Throws()
+        {
+            Action action = () => this.sut.AddPerson(null);
+
+            action.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Add_Valid_Saves()
+        {
+            var personToCreate = new Person
+            {
+                Name = "X",
+                CreatedTimestamp = DateTime.UtcNow,
+                GroupId = this.teachersGroup.Id
+            };
+            
+            this.sut.AddPerson(personToCreate);
+
+            var createdPerson = this.dbContext.Persons.Find(personToCreate.Id);
+            createdPerson.Should().BeEquivalentTo(personToCreate);
         }
 
         [Fact]
@@ -44,9 +71,8 @@ namespace E1.Web.Tests.DataAccess
         [Fact]
         public void Search_FiltersOnlyByGroup_ReturnsPersonsInGroup()
         {
-            var administrator = new Person { Name = "X", Group = administratorsGroup };
+            var administrator = new Person { Name = "X", Group = this.administratorsGroup };
             var teacher = new Person { Name = "Y", Group = this.teachersGroup };
-            this.dbContext.Groups.Add(administratorsGroup);
             this.dbContext.Persons.AddRange(administrator, teacher);
             this.dbContext.SaveChanges();
 
@@ -61,9 +87,8 @@ namespace E1.Web.Tests.DataAccess
         [Fact]
         public void Search_FiltersByExactName_ReturnsPersonsWithExactMatch()
         {
-            var johnSmith = new Person { Name = "John", Group = administratorsGroup };
+            var johnSmith = new Person { Name = "John", Group = this.administratorsGroup };
             var johnSomethingElse = new Person { Name = "John Something Else", Group = this.administratorsGroup };
-            this.dbContext.Groups.Add(administratorsGroup);
             this.dbContext.Persons.AddRange(johnSmith, johnSomethingElse);
             this.dbContext.SaveChanges();
 
@@ -78,10 +103,9 @@ namespace E1.Web.Tests.DataAccess
         [Fact]
         public void Search_FiltersByNamePartial_ReturnsPersonsWithPartialMatch()
         {
-            var johnSmith = new Person { Name = "John Smith", Group = administratorsGroup };
+            var johnSmith = new Person { Name = "John Smith", Group = this.administratorsGroup };
             var johnSomethingElse = new Person { Name = "John Something Else", Group = this.administratorsGroup };
             var mary = new Person { Name = "Mary Smith", Group = this.administratorsGroup };
-            this.dbContext.Groups.Add(administratorsGroup);
             this.dbContext.Persons.AddRange(johnSmith, johnSomethingElse, mary);
             this.dbContext.SaveChanges();
 
@@ -96,10 +120,9 @@ namespace E1.Web.Tests.DataAccess
         [Fact]
         public void Search_CombinesSearchParameters_ReturnsIntersectionOfResults()
         {
-            var johnSmith = new Person { Name = "John Smith", Group = administratorsGroup };
+            var johnSmith = new Person { Name = "John Smith", Group = this.administratorsGroup };
             var johnSomethingElse = new Person { Name = "John Something Else", Group = this.administratorsGroup };
             var mary = new Person { Name = "Mary Smith", Group = this.teachersGroup };
-            this.dbContext.Groups.Add(administratorsGroup);
             this.dbContext.Persons.AddRange(johnSmith, johnSomethingElse, mary);
             this.dbContext.SaveChanges();
 
