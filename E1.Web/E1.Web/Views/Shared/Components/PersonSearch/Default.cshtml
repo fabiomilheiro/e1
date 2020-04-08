@@ -1,0 +1,8 @@
+﻿@model PersonSearchViewComponentModel
+
+<div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.GroupId)
+        @Html.DropDownListFor(m => m.GroupId, Model.Groups)
+    </div>
+</div>

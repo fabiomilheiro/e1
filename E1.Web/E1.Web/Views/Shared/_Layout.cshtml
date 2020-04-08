@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using E1.Web.Extensions
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -26,6 +27,15 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        
+                        <li>
+                            @await Component.InvokeAsync("PersonSearch", new
+                       {
+                           exactName = Html.ViewContext.HttpContext.Request.Query["exactName"].ToString(),
+                           partialName = Html.ViewContext.HttpContext.Request.Query["partialName"].ToString(),
+                           groupId = Html.ViewContext.HttpContext.Request.Query["groupId"].ToInteger()
+                       })
                         </li>
                     </ul>
                 </div>
