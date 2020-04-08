@@ -26,7 +26,10 @@ namespace E1.Web.Tests.DataAccess
                 new DbContextOptions<AppDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
             builder.UseInMemoryDatabase("PersonRepositoryTestsDatabase");
 
-            this.dbContext = new AppDbContext(new DbContextOptionsBuilder<AppDbContext>(new DbContextOptions<AppDbContext>()).Options);
+            this.dbContext = new AppDbContext(builder.Options);
+            this.dbContext.Database.EnsureCreated();
+            this.dbContext.Database.OpenConnection();
+
             this.sut = new PersonRepository(this.dbContext);
         }
 
