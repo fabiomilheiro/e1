@@ -1,5 +1,6 @@
 ﻿using E1.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 
 namespace E1.Web.Components
 {
@@ -16,16 +17,7 @@ namespace E1.Web.Components
                 });
             }
 
-            if (TempData.ContainsKey("Error"))
-            {
-                return View(new MessageComponentViewModel
-                {
-                    Type = "error",
-                    Text = TempData["Error"].ToString()
-                });
-            }
-
-            return null;
+            return new ContentViewComponentResult(string.Empty);
         }
     }
 }

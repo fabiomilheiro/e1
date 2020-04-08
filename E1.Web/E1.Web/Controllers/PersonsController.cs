@@ -63,7 +63,6 @@ namespace E1.Web.Controllers
             if (!ModelState.IsValid)
             {
                 model.Groups = GetGroupSelectListItems(model.GroupId);
-                this.TempData["Error"] = "Please verify the error below.";
                 return View(model);
             }
 
