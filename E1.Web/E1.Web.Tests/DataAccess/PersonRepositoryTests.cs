@@ -9,7 +9,7 @@ using Xunit;
 
 namespace E1.Web.Tests.DataAccess
 {
-    public class PersonRepositoryTests
+    public class PersonRepositoryTests : IDisposable
     {
         private AppDbContext dbContext;
 
@@ -24,11 +24,11 @@ namespace E1.Web.Tests.DataAccess
 
             var builder = new DbContextOptionsBuilder<AppDbContext>(
                 new DbContextOptions<AppDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
-            builder.UseInMemoryDatabase("PersonRepositoryTestsDatabase");
+            builder.UseSqlite("DataSource=:memory:");
 
             this.dbContext = new AppDbContext(builder.Options);
-            this.dbContext.Database.EnsureCreated();
             this.dbContext.Database.OpenConnection();
+            this.dbContext.Database.EnsureCreated();
 
             this.sut = new PersonRepository(this.dbContext);
         }
@@ -84,6 +84,11 @@ namespace E1.Web.Tests.DataAccess
             });
 
             result.Should().BeEquivalentTo(johnSmith, johnSomethingElse);
+        }
+
+        public void Dispose()
+        {
+            dbContext?.Dispose();
         }
     }
 }
