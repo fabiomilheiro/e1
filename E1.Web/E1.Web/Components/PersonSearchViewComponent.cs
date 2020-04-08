@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using E1.Web.DataAccess;
 using E1.Web.Models;
@@ -23,12 +24,13 @@ namespace E1.Web.Components
                 ExactName = exactName,
                 PartialName = partialName,
                 GroupId = groupId,
-                Groups = this.groupRepository.GetGroups().Select(g => new SelectListItem
-                {
-                    Value = g.Id.ToString(),
-                    Text = g.Name,
-                    Selected = g.Id == groupId
-                })
+                Groups = 
+                    new [] { new SelectListItem("(Select)", "") }
+                    .Union(
+                        this.groupRepository
+                            .GetGroups()
+                            .Select(g => new SelectListItem(g.Name, g.Id.ToString(), g.Id == groupId))
+                            .ToArray())
             });
         }
     }

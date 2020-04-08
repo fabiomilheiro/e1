@@ -1,8 +1,10 @@
 ﻿@model PersonSearchViewComponentModel
 
-<div>
+@using (Html.BeginForm("Index", "Persons", new { }, FormMethod.Get))
+{
     <div class="form-group">
         @Html.LabelFor(m => m.GroupId)
         @Html.DropDownListFor(m => m.GroupId, Model.Groups)
     </div>
-</div>
+    <button type="submit">Search</button>
+}
