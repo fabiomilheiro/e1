@@ -2,19 +2,19 @@
 
 @using (Html.BeginForm("Index", "Persons", new { }, FormMethod.Get))
 {
-    <div class="person-search">
-        <div id="exact-search" class="form-group col-2">
+    <div class="person-search form-row float-right">
+        <div id="exact-search" class="form-group col">
             <label for="@Html.IdFor(m => m.ExactName)">Exact name <a class="toggle-search">(Toggle)</a></label>
-            @Html.TextBoxFor(m => m.ExactName)
+            @Html.TextBoxFor(m => m.ExactName, new { @class = "form-control" })
         </div>
-        <div id="partial-search" class="form-group col-1">
+        <div id="partial-search" class="form-group col">
             <label for="@Html.IdFor(m => m.PartialName)">Partial name <a class="toggle-search">(Toggle)</a></label>
-            @Html.TextBoxFor(m => m.PartialName)
+            @Html.TextBoxFor(m => m.PartialName, new { @class = "form-control" })
         </div>
-        <div class="form-group col-1">
+        <div class="form-group col">
             @Html.LabelFor(m => m.GroupId)
-            @Html.DropDownListFor(m => m.GroupId, Model.Groups)
+            @Html.DropDownListFor(m => m.GroupId, Model.Groups, "", new { @class = "form-control" })
         </div>
-        <button type="submit">Search</button>
+        <button type="submit" class="btn btn-primary btn-lg">Search</button>
     </div>
 }
