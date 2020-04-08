@@ -30,14 +30,21 @@ namespace E1.Web.DataAccess
                 throw new ArgumentNullException(nameof(criteria));
             }
 
+            if (ShouldUseExactName(criteria) && ShouldUsePartialName(criteria))
+            {
+                throw new ArgumentException(
+                    "Cannot use partial and exact search at the same time.",
+                    nameof(criteria));
+            }
+
             var query = this.dbContext.Persons.AsQueryable();
 
-            if (!string.IsNullOrEmpty(criteria.ExactName))
+            if (ShouldUseExactName(criteria))
             {
                 query = query.Where(p => p.Name == criteria.ExactName);
             }
             
-            if (!string.IsNullOrEmpty(criteria.PartialName))
+            if (ShouldUsePartialName(criteria))
             {
                 query = query.Where(p => p.Name.Contains(criteria.PartialName));
             }
@@ -58,6 +65,16 @@ namespace E1.Web.DataAccess
         public Person AddPerson(Person person)
         {
             throw new System.NotImplementedException();
+        }
+
+        private static bool ShouldUseExactName(SearchPersonCriteria criteria)
+        {
+            return !string.IsNullOrEmpty(criteria.ExactName);
+        }
+
+        private static bool ShouldUsePartialName(SearchPersonCriteria criteria)
+        {
+            return !string.IsNullOrEmpty(criteria.PartialName);
         }
     }
 }

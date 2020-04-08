@@ -93,6 +93,37 @@ namespace E1.Web.Tests.DataAccess
             result.Should().BeEquivalentTo(johnSmith, mary);
         }
 
+        [Fact]
+        public void Search_CombinesSearchParameters_ReturnsIntersectionOfResults()
+        {
+            var johnSmith = new Person { Name = "John Smith", Group = administratorsGroup };
+            var johnSomethingElse = new Person { Name = "John Something Else", Group = this.administratorsGroup };
+            var mary = new Person { Name = "Mary Smith", Group = this.teachersGroup };
+            this.dbContext.Groups.Add(administratorsGroup);
+            this.dbContext.Persons.AddRange(johnSmith, johnSomethingElse, mary);
+            this.dbContext.SaveChanges();
+
+            var result = this.sut.Search(new SearchPersonCriteria
+            {
+                PartialName = "Smith",
+                GroupId = this.teachersGroup.Id
+            });
+
+            result.Should().BeEquivalentTo(mary);
+        }
+
+        [Fact]
+        public void Search_PartialAndExactName_Throws()
+        {
+            Action action = () => this.sut.Search(new SearchPersonCriteria
+            {
+                PartialName = "John",
+                ExactName = "John Smith"
+            });
+
+            action.Should().Throw<ArgumentException>().Which.ParamName.Should().Be("criteria");
+        }
+
         public void Dispose()
         {
             dbContext?.Dispose();
