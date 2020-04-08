@@ -42,12 +42,12 @@ namespace E1.Web.Tests.DataAccess
         }
 
         [Fact]
-        public void Search_FiltersByGroup_ReturnsPersonsInGroup()
+        public void Search_FiltersOnlyByGroup_ReturnsPersonsInGroup()
         {
             var administrator = new Person { Name = "X", Group = administratorsGroup };
             var teacher = new Person { Name = "Y", Group = this.teachersGroup };
             this.dbContext.Groups.Add(administratorsGroup);
-            this.dbContext.Persons.AddRange(new[] { administrator, teacher });
+            this.dbContext.Persons.AddRange(administrator, teacher);
             this.dbContext.SaveChanges();
 
             var result = this.sut.Search(new SearchPersonCriteria
@@ -64,13 +64,12 @@ namespace E1.Web.Tests.DataAccess
             var johnSmith = new Person { Name = "John", Group = administratorsGroup };
             var johnSomethingElse = new Person { Name = "John Something Else", Group = this.administratorsGroup };
             this.dbContext.Groups.Add(administratorsGroup);
-            this.dbContext.Persons.AddRange(new[] { johnSmith, johnSomethingElse });
+            this.dbContext.Persons.AddRange(johnSmith, johnSomethingElse);
             this.dbContext.SaveChanges();
 
             var result = this.sut.Search(new SearchPersonCriteria
             {
-                SearchByExactName = true,
-                Name = "john"
+                ExactName = "John"
             });
 
             result.Should().BeEquivalentTo(johnSmith);
@@ -81,17 +80,17 @@ namespace E1.Web.Tests.DataAccess
         {
             var johnSmith = new Person { Name = "John Smith", Group = administratorsGroup };
             var johnSomethingElse = new Person { Name = "John Something Else", Group = this.administratorsGroup };
+            var mary = new Person { Name = "Mary Smith", Group = this.administratorsGroup };
             this.dbContext.Groups.Add(administratorsGroup);
-            this.dbContext.Persons.AddRange(new[] { johnSmith, johnSomethingElse });
+            this.dbContext.Persons.AddRange(johnSmith, johnSomethingElse, mary);
             this.dbContext.SaveChanges();
 
             var result = this.sut.Search(new SearchPersonCriteria
             {
-                SearchByExactName = false,
-                Name = "john"
+                PartialName = "Smith"
             });
 
-            result.Should().BeEquivalentTo(johnSmith, johnSomethingElse);
+            result.Should().BeEquivalentTo(johnSmith, mary);
         }
 
         public void Dispose()

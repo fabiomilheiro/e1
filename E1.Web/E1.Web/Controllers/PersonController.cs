@@ -21,8 +21,7 @@ namespace E1.Web.Controllers
         {
             var persons = this.personRepository.Search(new SearchPersonCriteria
             {
-                SearchByExactName = criteria.SearchByExactName,
-                Name = criteria.Name,
+                ExactName = criteria.Name,
                 GroupId = criteria.GroupId
             });
 

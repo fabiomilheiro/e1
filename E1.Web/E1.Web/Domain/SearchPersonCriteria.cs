@@ -2,9 +2,9 @@
 {
     public class SearchPersonCriteria
     {
-        public string Name { get; set; }
+        public string PartialName { get; set; }
 
-        public bool SearchByExactName { get; set; }
+        public string ExactName { get; set; }
 
         public int? GroupId { get; set; }
     }

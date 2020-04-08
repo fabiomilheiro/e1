@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using E1.Web.Domain;
 
 namespace E1.Web.DataAccess
@@ -29,7 +30,24 @@ namespace E1.Web.DataAccess
                 throw new ArgumentNullException(nameof(criteria));
             }
 
-            throw new System.NotImplementedException();
+            var query = this.dbContext.Persons.AsQueryable();
+
+            if (!string.IsNullOrEmpty(criteria.ExactName))
+            {
+                query = query.Where(p => p.Name == criteria.ExactName);
+            }
+            
+            if (!string.IsNullOrEmpty(criteria.PartialName))
+            {
+                query = query.Where(p => p.Name.Contains(criteria.PartialName));
+            }
+
+            if (criteria.GroupId.HasValue)
+            {
+                query = query.Where(p => p.GroupId == criteria.GroupId.Value);
+            }
+
+            return query.ToArray();
         }
 
         public Person GetPerson(int id)
