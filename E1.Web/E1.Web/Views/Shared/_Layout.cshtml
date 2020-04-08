@@ -30,12 +30,7 @@
                         </li>
                         
                         <li class="w-100">
-                            @await Component.InvokeAsync("PersonSearch", new
-                       {
-                           exactName = Html.ViewContext.HttpContext.Request.Query["exactName"].ToString(),
-                           partialName = Html.ViewContext.HttpContext.Request.Query["partialName"].ToString(),
-                           groupId = Html.ViewContext.HttpContext.Request.Query["groupId"].ToInteger()
-                       })
+                            @await Component.InvokeAsync("PersonSearch")
                         </li>
                     </ul>
                 </div>

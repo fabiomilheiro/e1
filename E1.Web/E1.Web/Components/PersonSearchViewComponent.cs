@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using E1.Web.DataAccess;
+using E1.Web.Extensions;
 using E1.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -17,12 +18,14 @@ namespace E1.Web.Components
             this.groupRepository = groupRepository;
         }
 
-        public IViewComponentResult Invoke(string exactName, string partialName, int? groupId)
+        public IViewComponentResult Invoke()
         {
+            var groupId = Request.Query["groupId"].ToInteger();
+
             return View(new PersonSearchViewComponentModel
             {
-                ExactName = exactName,
-                PartialName = partialName,
+                ExactName = Request.Query["exactName"].ToString(),
+                PartialName = Request.Query["partialName"].ToString(),
                 GroupId = groupId,
                 Groups = 
                     new [] { new SelectListItem("(Select)", "") }

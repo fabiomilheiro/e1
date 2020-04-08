@@ -1,0 +1,26 @@
+﻿@model AddPersonViewModel
+@{
+    ViewData["Title"] = "Add person";
+}
+
+<h1>@ViewBag.Title</h1>
+
+@using (Html.BeginForm("Add", "Persons", new { }, FormMethod.Post))
+{
+    <div class="form-row">
+        <div class="form-group col-6">
+            @Html.LabelFor(m => m.Name)
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Name)
+        </div>
+        <div class="form-group col-6">
+            @Html.LabelFor(m => m.GroupId)
+            @Html.DropDownListFor(m => m.GroupId, Model.Groups, "", new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.GroupId)
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary btn-lg">
+        Save
+    </button>
+    <a asp-action="Index">Go back</a>
+}

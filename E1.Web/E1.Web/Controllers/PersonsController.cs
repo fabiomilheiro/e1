@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using E1.Web.DataAccess;
 using E1.Web.Domain;
 using E1.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace E1.Web.Controllers
 {
@@ -11,10 +13,14 @@ namespace E1.Web.Controllers
     public class PersonsController : Controller
     {
         private readonly IPersonRepository personRepository;
+        private readonly IGroupRepository groupRepository;
 
-        public PersonsController(IPersonRepository personRepository)
+        public PersonsController(
+            IPersonRepository personRepository,
+            IGroupRepository groupRepository)
         {
             this.personRepository = personRepository;
+            this.groupRepository = groupRepository;
         }
 
         [HttpGet]
@@ -39,6 +45,46 @@ namespace E1.Web.Controllers
             {
                 Persons = personViewModels.ToArray()
             });
+        }
+
+        [HttpGet("add")]
+        public IActionResult Add()
+        {
+            return View(new AddPersonViewModel
+            {
+                Groups =
+                    GetGroupSelectListItems(null)
+            });
+        }
+
+        [HttpPost("add")]
+        public IActionResult Add([FromBody] AddPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                this.TempData.Add("Success", "Please verify the error below.");
+                return View(model);
+            }
+
+            this.personRepository.AddPerson(new Person
+            {
+                Name = model.Name,
+                CreatedTimestamp = DateTime.UtcNow,
+                GroupId = model.GroupId.GetValueOrDefault()
+            });
+
+            this.TempData.Add("Success", "The person was created successfully.");
+            return RedirectToAction("Index");
+        }
+
+        private IEnumerable<SelectListItem> GetGroupSelectListItems(int? groupId)
+        {
+            return new[] { new SelectListItem("(Select)", "") }
+                .Union(
+                    this.groupRepository
+                        .GetGroups()
+                        .Select(g => new SelectListItem(g.Name, g.Id.ToString(), g.Id == groupId))
+                        .ToArray());
         }
     }
 }
