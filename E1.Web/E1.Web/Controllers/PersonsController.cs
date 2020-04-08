@@ -8,17 +8,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace E1.Web.Controllers
 {
     [Route("persons")]
-    public class PersonController : Controller
+    public class PersonsController : Controller
     {
         private readonly IPersonRepository personRepository;
 
-        public PersonController(IPersonRepository personRepository)
+        public PersonsController(IPersonRepository personRepository)
         {
             this.personRepository = personRepository;
         }
 
         [HttpGet]
-        public IActionResult Search(SearchCriteriaViewModel criteria)
+        public IActionResult Index(SearchCriteriaViewModel criteria)
         {
             var persons = this.personRepository.Search(new SearchPersonCriteria
             {
@@ -30,12 +30,13 @@ namespace E1.Web.Controllers
             {
                 Id = p.Id,
                 Name = p.Name,
+                CreatedTimestamp = p.CreatedTimestamp,
                 GroupName = p.Group.Name
             });
 
             return View(new PersonSearchViewModel
             {
-                Persons = personViewModels
+                Persons = personViewModels.ToArray()
             });
         }
     }

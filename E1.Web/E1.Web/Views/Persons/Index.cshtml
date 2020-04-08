@@ -1,0 +1,32 @@
+﻿@model E1.Web.Models.PersonSearchViewModel
+
+@{
+    ViewData["Title"] = "Search results";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Creation date</th>
+            <th>Group</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var person in Model.Persons)
+        {
+            <tr>
+                <td>@person.Name</td>
+                <td>@person.CreatedTimestamp</td>
+                <td>@person.GroupName</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div>
+    <a asp-action="Index" asp-controller="Home">Back to homepage</a>
+</div>

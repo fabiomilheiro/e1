@@ -8,18 +8,15 @@ namespace E1.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IPersonRepository personRepository;
         private readonly ILogger<HomeController> logger;
 
-        public HomeController(IPersonRepository personRepository, ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
-            this.personRepository = personRepository;
             this.logger = logger;
         }
 
         public IActionResult Index()
         {
-            var person = personRepository.GetPerson(1);
             return View();
         }
 

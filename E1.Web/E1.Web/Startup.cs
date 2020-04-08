@@ -27,7 +27,9 @@ namespace E1.Web
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(this.Configuration.GetConnectionString("app"));
+                options
+                    .UseSqlServer(this.Configuration.GetConnectionString("app"))
+                    .UseLazyLoadingProxies();
             });
 
             services.AddScoped<IPersonRepository, PersonRepository>();
@@ -121,7 +123,7 @@ namespace E1.Web
         {
             foreach (var person in persons)
             {
-                var existingPerson = dbContext.Groups.SingleOrDefault(g => g.Name == person.Name);
+                var existingPerson = dbContext.Persons.SingleOrDefault(g => g.Name == person.Name);
 
                 if (existingPerson == null)
                 {
