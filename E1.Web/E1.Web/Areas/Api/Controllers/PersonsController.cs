@@ -41,7 +41,7 @@ namespace E1.Web.Areas.Api.Controllers
         }
 
         [HttpPost]
-        public ActionResult<PersonViewModel> Add([FromBody] AddPersonViewModel model)
+        public ActionResult<PersonViewModel> AddPerson([FromBody] AddPersonViewModel model)
         {
             if (!ModelState.IsValid)
             {

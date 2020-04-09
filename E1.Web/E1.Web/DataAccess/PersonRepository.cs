@@ -9,6 +9,8 @@ namespace E1.Web.DataAccess
 {
     public interface IPersonRepository
     {
+        bool Exists(string exactName);
+
         IEnumerable<Person> Search(SearchPersonCriteria criteria);
 
         Person GetPerson(int id);
@@ -23,6 +25,11 @@ namespace E1.Web.DataAccess
         public PersonRepository(AppDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public bool Exists(string exactName)
+        {
+            return this.dbContext.Persons.Any(p => p.Name == exactName);
         }
 
         public IEnumerable<Person> Search(SearchPersonCriteria criteria)

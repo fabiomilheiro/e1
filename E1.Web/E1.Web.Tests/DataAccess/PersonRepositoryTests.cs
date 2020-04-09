@@ -39,6 +39,31 @@ namespace E1.Web.Tests.DataAccess
         }
 
         [Fact]
+        public void Exists_Found_ReturnsTrues()
+        {
+            var person = new Person
+            {
+                Name = "Arnold",
+                CreatedTimestamp = DateTime.UtcNow,
+                GroupId = this.administratorsGroup.Id
+            };
+            this.dbContext.Persons.Add(person);
+            this.dbContext.SaveChanges();
+
+            var result = this.sut.Exists("Arnold");
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void Exists_NotFound_ReturnsFalse()
+        {
+            var result = this.sut.Exists("John Doe who does not exist");
+
+            Assert.False(result);
+        }
+
+        [Fact]
         public void AddPerson_Null_Throws()
         {
             Action action = () => this.sut.AddPerson(null);
