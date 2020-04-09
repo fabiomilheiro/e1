@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using E1.Web.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace E1.Web.DataAccess
 {
@@ -59,7 +61,9 @@ namespace E1.Web.DataAccess
 
         public Person GetPerson(int id)
         {
-            throw new System.NotImplementedException();
+            var person = this.dbContext.Persons.FirstOrDefault(p => p.Id == id);
+
+            return person;
         }
 
         public void AddPerson(Person person)
@@ -69,8 +73,15 @@ namespace E1.Web.DataAccess
                 throw new ArgumentNullException(nameof(person));
             }
 
-            this.dbContext.Persons.Add(person);
+            var personProxy = this.dbContext.CreateProxy<Person>();
+            personProxy.Name = person.Name;
+            personProxy.CreatedTimestamp = person.CreatedTimestamp;
+            personProxy.GroupId = person.GroupId;
+            
+            this.dbContext.Persons.Add(personProxy);
             this.dbContext.SaveChanges();
+
+            person.Id = personProxy.Id;
         }
 
         private static bool ShouldUseExactName(SearchPersonCriteria criteria)

@@ -24,7 +24,9 @@ namespace E1.Web.Tests.DataAccess
 
             var builder = new DbContextOptionsBuilder<AppDbContext>(
                 new DbContextOptions<AppDbContext>(new Dictionary<Type, IDbContextOptionsExtension>()));
-            builder.UseSqlite("DataSource=:memory:");
+            builder
+                .UseSqlite("DataSource=:memory:")
+                .UseLazyLoadingProxies();
 
             this.dbContext = new AppDbContext(builder.Options);
             this.dbContext.Database.OpenConnection();
@@ -37,7 +39,7 @@ namespace E1.Web.Tests.DataAccess
         }
 
         [Fact]
-        public void Add_Null_Throws()
+        public void AddPerson_Null_Throws()
         {
             Action action = () => this.sut.AddPerson(null);
 
@@ -45,19 +47,46 @@ namespace E1.Web.Tests.DataAccess
         }
 
         [Fact]
-        public void Add_Valid_Saves()
+        public void AddPerson_Valid_Saves()
         {
             var personToCreate = new Person
             {
                 Name = "X",
                 CreatedTimestamp = DateTime.UtcNow,
-                GroupId = this.teachersGroup.Id
+                GroupId = this.teachersGroup.Id,
+                Group = this.teachersGroup
             };
             
             this.sut.AddPerson(personToCreate);
 
             var createdPerson = this.dbContext.Persons.Find(personToCreate.Id);
+
             createdPerson.Should().BeEquivalentTo(personToCreate);
+        }
+
+        [Fact]
+        public void GetPerson_NotExists_ReturnsNull()
+        {
+            var result = this.sut.GetPerson(99999);
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void GetPerson_Exists_Returns()
+        {
+            var person = new Person
+            {
+                Name = "John Wallace",
+                CreatedTimestamp = DateTime.UtcNow,
+                GroupId = this.teachersGroup.Id
+            };
+            this.dbContext.Persons.Add(person);
+            this.dbContext.SaveChanges();
+
+            var result = this.sut.GetPerson(person.Id);
+
+            result.Should().BeEquivalentTo(person);
         }
 
         [Fact]
