@@ -127,7 +127,7 @@ namespace E1.Web
         {
             foreach (var person in persons)
             {
-                var existingPerson = dbContext.Persons.SingleOrDefault(g => g.Name == person.Name);
+                var existingPerson = dbContext.Persons.FirstOrDefault(g => g.Name == person.Name);
 
                 if (existingPerson == null)
                 {

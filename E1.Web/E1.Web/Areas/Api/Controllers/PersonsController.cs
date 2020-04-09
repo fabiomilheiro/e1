@@ -39,5 +39,33 @@ namespace E1.Web.Areas.Api.Controllers
                 GroupName = p.Group.Name
             }));
         }
+
+        [HttpPost]
+        public ActionResult<PersonViewModel> Add([FromBody] AddPersonViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var person = new Person
+            {
+                Name = model.Name,
+                CreatedTimestamp = DateTime.UtcNow,
+                GroupId = model.GroupId.GetValueOrDefault()
+            };
+
+            this.personRepository.AddPerson(person);
+
+            person = this.personRepository.GetPerson(person.Id);
+
+            return Ok(new PersonViewModel
+            {
+                Id = person.Id,
+                Name = person.Name,
+                GroupName = person.Group.Name,
+                CreatedTimestamp = person.CreatedTimestamp
+            });
+        }
     }
 }
