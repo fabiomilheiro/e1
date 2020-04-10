@@ -24,7 +24,7 @@ namespace E1.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
+            
             services.AddDbContext<AppDbContext>(options =>
             {
                 options
@@ -42,6 +42,7 @@ namespace E1.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(builder => builder.AllowAnyOrigin());
 
                 SeedDatabase(app);
             }
@@ -53,7 +54,7 @@ namespace E1.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            
             app.UseRouting();
 
             app.UseAuthorization();
