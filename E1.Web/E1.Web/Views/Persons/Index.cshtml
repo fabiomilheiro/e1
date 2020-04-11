@@ -7,6 +7,9 @@
 <h1>@ViewBag.Title</h1>
 
 <div>
+    <p>
+        <a asp-action="Add" asp-controller="Persons" asp-area="">Add person</a>
+    </p>
     <table class="table">
         <thead>
         <tr>
@@ -27,7 +30,3 @@
         </tbody>
     </table>
 </div>
-<p>
-    <a asp-action="Index" asp-controller="Home">Back to homepage</a> |
-    <a asp-action="Add" asp-controller="Persons" asp-area="">Add person</a>
-</p>
