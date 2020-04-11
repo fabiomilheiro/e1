@@ -3,6 +3,7 @@ using System.Linq;
 using E1.Web.DataAccess;
 using E1.Web.Domain;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,15 @@ namespace E1.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            
+            services
+                .AddCors(options =>
+                {
+                    options.AddPolicy("Default", builder =>
+                    {
+                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    });
+                });
+
             services.AddDbContext<AppDbContext>(options =>
             {
                 options
@@ -42,7 +51,7 @@ namespace E1.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(builder => builder.AllowAnyOrigin());
+                app.UseCors("Default");
 
                 SeedDatabase(app);
             }
@@ -54,7 +63,7 @@ namespace E1.Web
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            
+
             app.UseRouting();
 
             app.UseAuthorization();
