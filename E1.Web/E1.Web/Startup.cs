@@ -43,6 +43,7 @@ namespace E1.Web
 
             services.AddScoped<IPersonRepository, PersonRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddApplicationInsightsTelemetry();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
