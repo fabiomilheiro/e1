@@ -8,16 +8,15 @@
     const exactSearch = $("#exact-search");
     const partialSearch = $("#partial-search");
 
-    if (partialSearch.find("input").val()) {
-        exactSearch.hide();
-        partialSearch.show();
-    } else {
+    if (exactSearch.find("input").val()) {
         exactSearch.show();
         partialSearch.hide();
+    } else {
+        exactSearch.hide();
+        partialSearch.show();
     }
 
     $(".toggle-search").click(e => {
-        console.log("AAA");
         e.preventDefault();
         if (exactSearch.is(":visible")) {
             exactSearch.hide();

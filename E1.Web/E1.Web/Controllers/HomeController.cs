@@ -17,7 +17,7 @@ namespace E1.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToActionPermanent("Index", "Persons");
         }
 
         public IActionResult Privacy()
