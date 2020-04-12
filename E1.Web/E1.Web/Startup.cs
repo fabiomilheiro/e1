@@ -14,25 +14,22 @@ namespace E1.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             services
-                .AddCors(options =>
-                {
-                    options.AddPolicy("Default", builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    });
-                });
+                .AddCors(AddCorsPolicy);
 
             services.AddDbContext<AppDbContext>(options =>
             {
@@ -46,14 +43,28 @@ namespace E1.Web
             services.AddApplicationInsightsTelemetry();
         }
 
+        private void AddCorsPolicy(CorsOptions options)
+        {
+            options.AddPolicy("Default", builder =>
+            {
+                if (Environment.IsDevelopment())
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                }
+                else
+                {
+                    builder.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins("*.eintech.azurewebsites.net");
+                }
+            });
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors("Default");
-
+            
                 SeedDatabase(app);
             }
             else
@@ -62,6 +73,9 @@ namespace E1.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            app.UseCors("Default");
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
