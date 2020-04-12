@@ -29,13 +29,7 @@ namespace E1.Web
         {
             services.AddControllersWithViews();
             services
-                .AddCors(options =>
-                {
-                    options.AddPolicy("Default", builder =>
-                    {
-                        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-                    });
-                });
+                .AddCors(AddCorsPolicy);
 
             services.AddDbContext<AppDbContext>(options =>
             {
