@@ -55,7 +55,10 @@ namespace E1.Web
                 }
                 else
                 {
-                    builder.SetIsOriginAllowed(origin => Regex.IsMatch(origin, "^https://eintech.azurewebsites.net$"));
+                    builder
+                        .SetIsOriginAllowed(origin => Regex.IsMatch(origin, "^https://eintech.azurewebsites.net$"))
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
                 }
             });
         }
