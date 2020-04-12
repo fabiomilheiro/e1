@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using E1.Web.DataAccess;
 using E1.Web.Domain;
 using Microsoft.AspNetCore.Builder;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Group = E1.Web.Domain.Group;
 
 namespace E1.Web
 {
@@ -53,7 +55,7 @@ namespace E1.Web
                 }
                 else
                 {
-                    builder.SetIsOriginAllowedToAllowWildcardSubdomains().WithOrigins("*.eintech.azurewebsites.net");
+                    builder.SetIsOriginAllowed(origin => Regex.IsMatch(origin, "^https://eintech.azurewebsites.net$"));
                 }
             });
         }
